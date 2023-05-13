@@ -1,0 +1,12 @@
+version: '3'
+services:
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: cafe-fep
+    environment:
+      - PROJECT_ENV="base"
+      - TZ=Asia/Seoul
+    ports:
+      - "8080:80"
