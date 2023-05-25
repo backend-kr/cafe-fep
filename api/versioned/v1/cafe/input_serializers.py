@@ -41,3 +41,15 @@ class NaverCafeListReqSerializer(AdapterMixin, serializers.Serializer):
         data = super().to_internal_value(data=data)
         data['query'] = data['query'] + ' 카페'
         return data
+
+
+class NaverCafeDetailReqSerializer(AdapterMixin, serializers.Serializer):
+    adapter = naver_openapi_adapter
+    endpoint = "/v5/api/sites/summary/{cafe_id}"
+
+    response_serializer_class = output_serializers.NaverCafeDetailRespSerializer
+
+    cafe_id = serializers.CharField(default='', help_text='카페 아이디')
+    lang = serializers.CharField(default='ko', help_text='언어')
+
+

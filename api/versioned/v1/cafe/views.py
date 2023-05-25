@@ -35,12 +35,29 @@ class NaverCafeViewSet(RetrieveModelMixin, CafeBaseViewSet):
     네이버 크롤링 카페 리스트 반환
     ### endpoint : `/v5/api/search`
 
-    ### 거래 구분(display_count) Min: 1, MAX: 300
+    ### 요청 구분(display_count) Min: 1, MAX: 300
 
     """
 
     filter_class = None
     serializer_class = input_serializers.NaverCafeListReqSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
+
+class NaverCafeDetailViewSet(RetrieveModelMixin, CafeBaseViewSet):
+    """
+    retrieve: 네이버 카페 디테일 크롤링
+
+    네이버 크롤링 카페 디테일 리스트 반환
+    ### endpoint : `/v5/api/sites/summary/{cafe_id}`
+
+
+    """
+
+    filter_class = None
+    serializer_class = input_serializers.NaverCafeDetailReqSerializer
 
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)

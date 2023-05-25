@@ -37,3 +37,16 @@ class NaverListRespSerializer(serializers.Serializer):
 
     total_count = serializers.IntegerField(default='', source="result.place.totalCount", help_text='검색 전체 개수')
     result = NaverPlaceDataSerializer(source='result.place.list', many=True)
+
+
+class NaverCafeDetailRespSerializer(serializers.Serializer):
+    class NaverCafeDetailOptionDataSerializer(serializers.Serializer):
+        """Naver Cafe Detail DataSerializer"""
+        option_id = serializers.IntegerField(default='', source='id', help_text='편의 옵션 아이디')
+        option_name = serializers.CharField(default='', source='name', help_text='편의 옵션 이름')
+
+    cafe_name = serializers.CharField(default='', source="name", help_text='검색 전체 개수')
+    description = serializers.CharField(default='', help_text='검색 전체 개수')
+    parking_support = serializers.BooleanField(default=False, source='isParkingSupported')
+    options = NaverCafeDetailOptionDataSerializer(many=True)
+    review_count = serializers.IntegerField(default=0, source='reviewCount', help_text='리뷰 갯수')
