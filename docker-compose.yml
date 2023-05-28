@@ -2,7 +2,7 @@ version: '3'
 services:
   django:
     image: 221.155.148.197:5000/cafe_fep-django:latest
-    image: cafe-fep
+    container_name: cafe-fep
     environment:
       - PROJECT_ENV="base"
       - TZ=Asia/Seoul
