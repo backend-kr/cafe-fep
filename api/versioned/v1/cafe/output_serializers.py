@@ -54,6 +54,7 @@ class NaverCafeDetailRespSerializer(serializers.Serializer):
     cafe_name = serializers.CharField(default='', source="name", help_text='검색 전체 개수')
     description = serializers.CharField(default='', help_text='검색 전체 개수')
     parking_support = serializers.BooleanField(default=False, source='isParkingSupported')
+    categories = serializers.ListField(child=serializers.CharField())
     options = NaverCafeDetailOptionDataSerializer(many=True)
     menu_images = NaverCafeMenuImagesSerializer(source='menuImages', many=True)
     review_count = serializers.IntegerField(default=0, source='reviewCount', help_text='리뷰 갯수')
