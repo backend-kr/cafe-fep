@@ -49,7 +49,7 @@ class NaverCafeDetailReqSerializer(AdapterMixin, serializers.Serializer):
 
     response_serializer_class = output_serializers.NaverCafeDetailRespSerializer
 
-    cafe_id = serializers.CharField(default='', help_text='카페 아이디')
+    cafe_id = serializers.CharField(default='1506083152', help_text='카페 아이디')
     lang = serializers.CharField(default='ko', help_text='언어')
 
 
