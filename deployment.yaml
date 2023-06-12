@@ -1,0 +1,39 @@
+# service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: cafe-fep-service
+spec:
+  selector:
+    app: cafe-fep
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
+---
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cafe-fep-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: cafe-fep
+  template:
+    metadata:
+      labels:
+        app: cafe-fep
+    spec:
+      containers:
+      - name: cafe-fep
+        image: 172.30.1.68:5000/cafe-fep  # 이 부분을 변경하세요.
+        ports:
+        - containerPort: 80
+        env:
+        - name: PROJECT_ENV
+          value: "base"
+        - name: TZ
+          value: "Asia/Seoul"
