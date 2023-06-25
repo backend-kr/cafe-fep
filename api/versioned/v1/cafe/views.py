@@ -16,9 +16,9 @@ class CafeBaseViewSet(MappingViewSetMixin,
 
 class KAKAOCafeViewSet(RetrieveModelMixin, CafeBaseViewSet):
     """
-    retrieve: kakao open api(K8S를 테스트를 위해 주석 생성해봄)
+    retrieve: kakao open api
 
-    kakao open api 카페 리스트 반환 K8S 
+    kakao open api 카페 리스트 반환
     """
 
     filter_class = None
