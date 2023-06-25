@@ -10,7 +10,7 @@ pipeline {
                     def IMAGE_NAME="cafe_fep-django"
 
                     // Shell 커맨드를 Groovy로 변환
-                    def highestVersionOutput = sh(script: "curl -s http://${REGISTRY}/v2/${IMAGE_NAME}/tags/list | jq -r '.tags[]' | grep -E '^[0-9]+\\.[0-9]+\\.[0-9]+(-dev-[0-9]+)?$' | sort -V | tail -1", returnStdout: true).trim()
+                    def highestVersionOutput = sh(script: 'curl -s "http://' + REGISTRY + '/v2/' + IMAGE_NAME + '/tags/list" | jq -r ".tags[]" | grep -E "^[0-9]+\\\\.[0-9]+\\\\.[0-9]+(-dev-[0-9]+)?$" | sort -V | tail -1', returnStdout: true).trim()
                     def highestVersion = highestVersionOutput ? highestVersionOutput : "0.0.0"
 
                     def versionParts = highestVersion.split('-')
