@@ -21,6 +21,8 @@ class KAKAOCafeViewSet(RetrieveModelMixin, CafeBaseViewSet):
     kakao open api 카페 리스트 반환
 
     현재 작동 안시키는중!
+
+    
     """
 
     filter_class = None
