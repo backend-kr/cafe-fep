@@ -12,7 +12,7 @@
 ## API Document
 
 API에 대한 문서는 swagger를 통해 자동생성되도록 되어있습니다.
-각 API는 `버전`이 존재하며 버전의 룰은 `"v{version}"`으로 적용됩니다.
+각 API는 `버전`이 존재하며 버전의 룰은 `"v{version}"`으로 적용됩니다.g
 > 예) v1, v2, v3 ...
 
 Swagger API 문서 주소는 `/api/v{version}/swagger`입니다.
