@@ -47,7 +47,7 @@ class NaverCafeDetailRespSerializer(serializers.Serializer):
         option_name = serializers.CharField(default='', source='name', help_text='편의 옵션 이름')
 
     class NaverCafeMenuImagesSerializer(serializers.Serializer):
-        """Naver Cafe Menu Image Detail DataSerializer"""
+        """Naver Cafe Menu Image Detail DataSerializers"""
         image_url = serializers.CharField(default='', source="imageUrl", help_text='카페 홈페이지')
 
     id = serializers.CharField(default='', help_text='카페 아이디')
