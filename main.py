@@ -9,7 +9,7 @@ import requests
 # y - 위도
 
 """
-sdfgsdfg
+sdfgsdfgsdfasdf
 MT1	대형마트
 CS2	편의점
 PS3	어린이집, 유치원
