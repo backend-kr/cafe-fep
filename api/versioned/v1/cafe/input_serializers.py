@@ -35,16 +35,16 @@ class NaverCafeListReqSerializer(AdapterMixin, serializers.Serializer):
 
     response_serializer_class = output_serializers.NaverCafeListRespSerializer
 
-    caller = serializers.HiddenField(default='pcweb', help_text='요청 기기')
     category = serializers.IntegerField(default=0, help_text='카테고리')
     query = serializers.CharField(default="연신내", help_text='지역', allow_blank=True)
-    page = serializers.CharField(default='1', help_text='페이지')
-    type = serializers.HiddenField(default='all', help_text='타입')
-    recommandation = serializers.HiddenField(default="true", source='isPlaceRecommendationReplace', help_text='추천')
     latitude = serializers.CharField(default='37.5740381', help_text='위도')
     longitude = serializers.CharField(default='126.9745863', help_text='경도')
+    page = serializers.CharField(default='1', help_text='페이지')
     display_count = serializers.IntegerField(default=1, source='displayCount', help_text='요청 개수', min_value=1,
                                              max_value=300)
+    caller = serializers.HiddenField(default='pcweb', help_text='요청 기기')
+    type = serializers.HiddenField(default='all', help_text='타입')
+    recommandation = serializers.HiddenField(default="true", source='isPlaceRecommendationReplace', help_text='추천')
     lang = serializers.HiddenField(default='ko', help_text='언어')
 
 
