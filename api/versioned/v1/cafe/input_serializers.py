@@ -33,6 +33,8 @@ class NaverCafeListReqSerializer(AdapterMixin, serializers.Serializer):
         2: output_serializers.NaverAttractionListRespSerializer
     }
 
+    response_serializer_class = output_serializers.NaverCafeListRespSerializer
+
     caller = serializers.HiddenField(default='pcweb', help_text='요청 기기')
     category = serializers.IntegerField(default=0, help_text='카테고리')
     query = serializers.CharField(default="연신내", help_text='지역', allow_blank=True)
@@ -51,7 +53,7 @@ class NaverCafeListReqSerializer(AdapterMixin, serializers.Serializer):
         category_number = data.pop('category', 0)
         category_suffix = self.CATEGORY_MAPPING.get(category_number, 0)
         data['query'] = data['query'] + f' {category_suffix}'
-        self.response_serializer_class = self.serializer_action_map[category_number]
+        self.response_serializer_class = self.get_serializer_class(category_number)
         return data
 
 

@@ -1,5 +1,6 @@
 class AdapterMixin(object):
     adapter = None
+    serializer_action_map = {}
     response_serializer_class = None
     base_url = None
     endpoint = ''
@@ -17,6 +18,8 @@ class AdapterMixin(object):
                                         **self.kwargs)
         return response
 
+    def get_serializer_class(self, action):
+        return self.serializer_action_map.get(action, self.response_serializer_class)
 
 class MappingViewSetMixin(object):
     serializer_action_map = {}
