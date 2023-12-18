@@ -18,25 +18,6 @@ class KakaoListRespSerializer(serializers.Serializer):
     documents = CafeListDataSerializer(many=True)
 
 
-class NaverListRespSerializer(serializers.Serializer):
-    class NaverPlaceDataSerializer(serializers.Serializer):
-        """Naver 위치 DataSerializer"""
-        cafe_id = serializers.CharField(default='', source='id', help_text='카페 아이디')
-        menu_info = serializers.CharField(default='', source='menuInfo', help_text='카페 메뉴')
-        tel = serializers.CharField(help_text='카페 번호')
-        thumUrls = serializers.ListField(child=serializers.CharField())
-        title = serializers.CharField(default='', source='display', help_text='카페 이름')
-        review_count = serializers.CharField(default='', source='reviewCount', help_text='카페 이름')
-        place_review_count = serializers.CharField(default='', source='placeReviewCount', help_text='카페 이름')
-        address = serializers.CharField(default='')
-        road_address = serializers.CharField(default='', source='roadAddress', help_text='카페 주소 1')
-        business_hours = serializers.CharField(default='', source='businessStatus.businessHours', help_text='카페 주소 2')
-        latitude = serializers.CharField(default='', source='y', help_text='위도')
-        longitude = serializers.CharField(default='', source='x', help_text='경도')
-        home_page = serializers.CharField(default='', source="homePage", help_text='카페 홈페이지')
-
-    total_count = serializers.IntegerField(default='', source="result.place.totalCount", help_text='검색 전체 개수')
-    result = NaverPlaceDataSerializer(source='result.place.list', many=True)
 
 
 
@@ -58,3 +39,35 @@ class NaverCafeDetailRespSerializer(serializers.Serializer):
     options = NaverCafeDetailOptionDataSerializer(many=True)
     menu_images = NaverCafeMenuImagesSerializer(source='menuImages', many=True)
     review_count = serializers.IntegerField(default=0, source='reviewCount', help_text='리뷰 갯수')
+
+class NaverBaseListRespSerializer(serializers.Serializer):
+    class NaverBaseDataSerializer(serializers.Serializer):
+        """Naver 위치 DataSerializer"""
+        CafeId = serializers.CharField(default='', source='id', help_text='카페 아이디')
+        menu_info = serializers.CharField(default='', source='menuInfo', help_text='카페 메뉴')
+        tel = serializers.CharField(help_text='카페 번호')
+        thumUrls = serializers.ListField(child=serializers.CharField())
+        title = serializers.CharField(default='', source='display', help_text='카페 이름')
+        review_count = serializers.CharField(default='', source='reviewCount', help_text='카페 이름')
+        place_review_count = serializers.CharField(default='', source='placeReviewCount', help_text='카페 이름')
+        address = serializers.CharField(default='')
+        road_address = serializers.CharField(default='', source='roadAddress', help_text='카페 주소 1')
+        business_hours = serializers.CharField(default='', source='businessStatus.businessHours', help_text='카페 주소 2')
+        latitude = serializers.CharField(default='', source='y', help_text='위도')
+        longitude = serializers.CharField(default='', source='x', help_text='경도')
+        home_page = serializers.CharField(default='', source="homePage", help_text='카페 홈페이지')
+
+    total_count = serializers.IntegerField(default='', source="result.place.totalCount", help_text='검색 전체 개수')
+    result = NaverBaseDataSerializer(source='result.place.list', many=True)
+
+
+class NaverRestaurantListRespSerializer(NaverBaseListRespSerializer):
+    """음식점 OutputSerializer"""
+
+
+class NaverCafeListRespSerializer(NaverBaseListRespSerializer):
+    """카페 OutputSerializer"""
+
+
+class NaverAttractionListRespSerializer(NaverBaseListRespSerializer):
+    """명소 OutputSerializer"""

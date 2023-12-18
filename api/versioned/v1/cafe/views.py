@@ -1,6 +1,8 @@
 from rest_framework import viewsets, permissions
 from api.versioned.v1.cafe import input_serializers
+from api.versioned.v1.cafe.output_serializers import NaverBaseListRespSerializer
 from common.viewsets import RetrieveModelMixin, MappingViewSetMixin
+from drf_yasg.utils import swagger_auto_schema
 
 
 class CafeBaseViewSet(MappingViewSetMixin,
@@ -42,6 +44,11 @@ class NaverCafeViewSet(RetrieveModelMixin, CafeBaseViewSet):
     filter_class = None
     serializer_class = input_serializers.NaverCafeListReqSerializer
 
+    @swagger_auto_schema(
+        responses={200: NaverBaseListRespSerializer},
+        operation_summary="네이버 카페, 식당, 명소 크롱링 API",
+        operation_description="네이버에서 카페, 식당, 명소를 크롤링."
+    )
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
 

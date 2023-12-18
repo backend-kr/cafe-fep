@@ -4,7 +4,6 @@ from api.versioned.v1.cafe import output_serializers
 from api.versioned.v1.cafe.serializers import AdapterMixin
 from api.versioned.v1.common.adapter import kakao_openapi_adapter, naver_openapi_adapter
 
-
 class KaKaoCafeListReqSerializer(AdapterMixin, serializers.Serializer):
     adapter = kakao_openapi_adapter
     endpoint = "/v2/local/search/category.json"
@@ -23,23 +22,36 @@ class NaverCafeListReqSerializer(AdapterMixin, serializers.Serializer):
     adapter = naver_openapi_adapter
     endpoint = "/v5/api/search"
 
-    response_serializer_class = output_serializers.NaverListRespSerializer
+    CATEGORY_MAPPING = {
+        0: '음식점',
+        1: '카페',
+        2: '관광명소',
+    }
+    serializer_action_map = {
+        0: output_serializers.NaverCafeListRespSerializer,
+        1: output_serializers.NaverRestaurantListRespSerializer,
+        2: output_serializers.NaverAttractionListRespSerializer
+    }
 
-    caller = serializers.CharField(default='pcweb', help_text='요청 기기')
-    query = serializers.CharField(default="연신내", help_text='지역')
+    caller = serializers.HiddenField(default='pcweb', help_text='요청 기기')
+    category = serializers.IntegerField(default=0, help_text='카테고리')
+    query = serializers.CharField(default="연신내", help_text='지역', allow_blank=True)
     page = serializers.CharField(default='1', help_text='페이지')
-    type = serializers.CharField(default='all', help_text='타입')
-    recommandation = serializers.CharField(default="true", source='isPlaceRecommendationReplace', help_text='추천')
-    latitude = serializers.CharField(default='37.6943312', help_text='위도')
-    longitude = serializers.CharField(default='126.764245', help_text='경도')
+    type = serializers.HiddenField(default='all', help_text='타입')
+    recommandation = serializers.HiddenField(default="true", source='isPlaceRecommendationReplace', help_text='추천')
+    latitude = serializers.CharField(default='37.5740381', help_text='위도')
+    longitude = serializers.CharField(default='126.9745863', help_text='경도')
     display_count = serializers.IntegerField(default=1, source='displayCount', help_text='요청 개수', min_value=1,
                                              max_value=300)
-    lang = serializers.CharField(default='ko', help_text='언어')
+    lang = serializers.HiddenField(default='ko', help_text='언어')
 
 
     def to_internal_value(self, data):
-        data = super().to_internal_value(data=data)
-        data['query'] = data['query'] + ' 카페'
+        data = super().to_internal_value(data)
+        category_number = data.pop('category', 0)
+        category_suffix = self.CATEGORY_MAPPING.get(category_number, '기타')
+        data['query'] = data['query'] + f' {category_suffix}'
+        self.response_serializer_class = self.serializer_action_map[category_number]
         return data
 
 

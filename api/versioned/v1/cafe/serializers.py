@@ -16,3 +16,24 @@ class AdapterMixin(object):
                                         body=body,
                                         **self.kwargs)
         return response
+
+
+class MappingViewSetMixin(object):
+    serializer_action_map = {}
+    permission_classes_map = {}
+    queryset_map = {}
+
+    def get_queryset(self):
+        return self.queryset_map.get(self.action, self.queryset)
+
+    def get_permissions(self):
+        permission_classes = self.permission_classes
+        if self.permission_classes_map.get(self.action, None):
+            permission_classes = self.permission_classes_map[self.action]
+
+        return [permission() for permission in permission_classes]
+
+    def get_serializer_class(self):
+        if self.serializer_action_map.get(self.action, None):
+            return self.serializer_action_map[self.action]
+        return self.serializer_class
