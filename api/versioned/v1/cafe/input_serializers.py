@@ -49,7 +49,7 @@ class NaverCafeListReqSerializer(AdapterMixin, serializers.Serializer):
     def to_internal_value(self, data):
         data = super().to_internal_value(data)
         category_number = data.pop('category', 0)
-        category_suffix = self.CATEGORY_MAPPING.get(category_number, '기타')
+        category_suffix = self.CATEGORY_MAPPING.get(category_number, 0)
         data['query'] = data['query'] + f' {category_suffix}'
         self.response_serializer_class = self.serializer_action_map[category_number]
         return data
