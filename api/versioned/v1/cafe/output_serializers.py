@@ -66,7 +66,7 @@ class NaverBaseListRespSerializer(serializers.Serializer):
         cafe_id = serializers.CharField(default='', source='id', help_text='카페 아이디')
         menu_info = serializers.CharField(default='', source='menuInfo', help_text='카페 메뉴')
         tel = serializers.CharField(help_text='카페 번호')
-        thumUrls = serializers.ListField(child=serializers.CharField())
+        thumbnails = serializers.ListField(child=serializers.CharField(), source='thumUrls')
         title = serializers.CharField(default='', source='display', help_text='카페 이름')
         review_count = serializers.CharField(default='', source='reviewCount', help_text='카페 이름')
         place_review_count = serializers.CharField(default='', source='placeReviewCount', help_text='카페 이름')
@@ -76,6 +76,17 @@ class NaverBaseListRespSerializer(serializers.Serializer):
         latitude = serializers.CharField(default='', source='y', help_text='위도')
         longitude = serializers.CharField(default='', source='x', help_text='경도')
         home_page = serializers.CharField(default='', source="homePage", help_text='카페 홈페이지')
+        def to_representation(self, instance):
+            instance = super().to_representation(instance=instance)
+            business_hours = instance.pop('business_hours')
+            if not business_hours:
+                start_time_str, end_time_str = business_hours.split('~')
+                instance['business_hours_start'] = get_arrow_datetime(start_time_str)
+                instance['business_hours_end'] = get_arrow_datetime(end_time_str)
+            else:
+                instance['business_hours_start'] = None
+                instance['business_hours_end'] = None
+            return instance
 
     total_count = serializers.IntegerField(default='', source="result.place.totalCount", help_text='검색 전체 개수')
     result = NaverBaseDataSerializer(source='result.place.list', many=True)
@@ -91,10 +102,15 @@ class NaverCafeListRespSerializer(NaverBaseListRespSerializer):
         instance = super().to_representation(instance=instance)
         result = instance.get('result', None)
         for _result in result:
-            business_hours = _result.pop('business_hours')
-            start_time_str, end_time_str = business_hours.split('~')
-            _result['business_hours_start'] = get_arrow_datetime(start_time_str)
-            _result['business_hours_end'] = get_arrow_datetime(end_time_str)
+            menu_items = _result.pop('menu_info').split(" | ")
+            menu_dict = {}
+            for item in menu_items:
+                if "변동가격" in item:
+                    menu_dict[item] = "변동가격"
+                else:
+                    name, price = item.rsplit(" ", 1)
+                    menu_dict[name] = price
+            _result['menu_info'] = menu_dict
         return instance
 
 

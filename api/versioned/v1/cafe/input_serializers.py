@@ -34,8 +34,6 @@ class NaverCafeListReqSerializer(AdapterMixin, serializers.Serializer):
         2: output_serializers.NaverAttractionListRespSerializer
     }
 
-    response_serializer_class = output_serializers.NaverCafeListRespSerializer
-
     category = serializers.IntegerField(default=0, help_text='카테고리')
     query = serializers.CharField(default="연신내", help_text='지역', allow_blank=True)
     latitude = serializers.CharField(default='37.5740381', help_text='위도')
@@ -47,7 +45,6 @@ class NaverCafeListReqSerializer(AdapterMixin, serializers.Serializer):
     type = serializers.HiddenField(default='all', help_text='타입')
     recommandation = serializers.HiddenField(default="true", source='isPlaceRecommendationReplace', help_text='추천')
     lang = serializers.HiddenField(default='ko', help_text='언어')
-
 
     def to_internal_value(self, data):
         data = super().to_internal_value(data)
