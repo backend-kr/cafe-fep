@@ -1,6 +1,26 @@
+import arrow
 from django.conf import settings
 from rest_framework import serializers
 
+
+def get_arrow_datetime(value):
+    date_part = value[:8]
+    time_part = value[8:]
+
+    date = arrow.get(date_part, 'YYYYMMDD')
+
+    hours = int(time_part[:2])
+    minutes = int(time_part[2:])
+
+    if hours >= 24:
+        days_to_add = hours // 24
+        hours %= 24
+
+        date = date.shift(days=days_to_add).replace(hour=hours, minute=minutes)
+    else:
+        date = date.replace(hour=hours, minute=minutes)
+
+    return date.format('HH:mm')
 class KakaoListRespSerializer(serializers.Serializer):
     class CafeListDataSerializer(serializers.Serializer):
         address_name = serializers.CharField(default='', help_text="주소")
@@ -67,6 +87,15 @@ class NaverRestaurantListRespSerializer(NaverBaseListRespSerializer):
 
 class NaverCafeListRespSerializer(NaverBaseListRespSerializer):
     """카페 OutputSerializer"""
+    def to_representation(self, instance):
+        instance = super().to_representation(instance=instance)
+        result = instance.get('result', None)
+        for _result in result:
+            business_hours = _result.pop('business_hours')
+            start_time_str, end_time_str = business_hours.split('~')
+            _result['business_hours_start'] = get_arrow_datetime(start_time_str)
+            _result['business_hours_end'] = get_arrow_datetime(end_time_str)
+        return instance
 
 
 class NaverAttractionListRespSerializer(NaverBaseListRespSerializer):
