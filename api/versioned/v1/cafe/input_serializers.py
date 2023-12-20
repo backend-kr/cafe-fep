@@ -1,3 +1,4 @@
+import arrow
 from rest_framework import serializers
 
 from api.versioned.v1.cafe import output_serializers
@@ -47,6 +48,25 @@ class NaverCafeListReqSerializer(AdapterMixin, serializers.Serializer):
     recommandation = serializers.HiddenField(default="true", source='isPlaceRecommendationReplace', help_text='추천')
     lang = serializers.HiddenField(default='ko', help_text='언어')
 
+    def _get_arrow_datetime(self, value):
+        date_part = value[:8]
+        time_part = value[8:]
+
+        date = arrow.get(date_part, 'YYYYMMDD')
+
+        hours = int(time_part[:2])
+        minutes = int(time_part[2:])
+
+        if hours >= 24:
+            days_to_add = hours // 24
+            hours %= 24
+
+            date = date.shift(days=days_to_add).replace(hour=hours, minute=minutes)
+        else:
+            date = date.replace(hour=hours, minute=minutes)
+
+        return date.format('HH:mm')
+
 
     def to_internal_value(self, data):
         data = super().to_internal_value(data)
@@ -56,6 +76,15 @@ class NaverCafeListReqSerializer(AdapterMixin, serializers.Serializer):
         self.response_serializer_class = self.get_serializer_class(category_number)
         return data
 
+    def to_representation(self, instance):
+        instance = super().to_representation(instance=instance)
+        result = instance.get('result', None)
+        for _result in result:
+            business_hours = _result.pop('business_hours')
+            start_time_str, end_time_str = business_hours.split('~')
+            _result['business_hours_start'] = self._get_arrow_datetime(start_time_str)
+            _result['business_hours_end'] = self._get_arrow_datetime(end_time_str)
+        return instance
 
 class NaverCafeDetailReqSerializer(AdapterMixin, serializers.Serializer):
     adapter = naver_openapi_adapter

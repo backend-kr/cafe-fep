@@ -43,7 +43,7 @@ class NaverCafeDetailRespSerializer(serializers.Serializer):
 class NaverBaseListRespSerializer(serializers.Serializer):
     class NaverBaseDataSerializer(serializers.Serializer):
         """Naver 위치 DataSerializer"""
-        CafeId = serializers.CharField(default='', source='id', help_text='카페 아이디')
+        cafe_id = serializers.CharField(default='', source='id', help_text='카페 아이디')
         menu_info = serializers.CharField(default='', source='menuInfo', help_text='카페 메뉴')
         tel = serializers.CharField(help_text='카페 번호')
         thumUrls = serializers.ListField(child=serializers.CharField())
