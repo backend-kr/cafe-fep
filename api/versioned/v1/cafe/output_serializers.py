@@ -79,11 +79,11 @@ class NaverBaseListRespSerializer(serializers.Serializer):
         def to_representation(self, instance):
             instance = super().to_representation(instance=instance)
             business_hours = instance.pop('business_hours')
-            if not business_hours:
+            try:
                 start_time_str, end_time_str = business_hours.split('~')
                 instance['business_hours_start'] = get_arrow_datetime(start_time_str)
                 instance['business_hours_end'] = get_arrow_datetime(end_time_str)
-            else:
+            except:
                 instance['business_hours_start'] = None
                 instance['business_hours_end'] = None
             return instance
@@ -109,7 +109,7 @@ class NaverCafeListRespSerializer(NaverBaseListRespSerializer):
                     menu_dict[item] = "변동가격"
                 else:
                     name, price = item.rsplit(" ", 1)
-                    menu_dict[name] = price
+                    menu_dict[name] = int(price.replace(',', ''))
             _result['menu_info'] = menu_dict
         return instance
 

@@ -40,4 +40,4 @@ if settings.DEBUG:
             ),
             permission_classes=(permissions.AllowAny,),
         )
-        urlpatterns = [re_path(r'^api/' + version + '/docs/$', sv.with_ui('swagger', cache_timeout=300)),] + urlpatterns
+        urlpatterns = [re_path(r'^api/' + version + '/swagger/$', sv.with_ui('swagger', cache_timeout=300)),] + urlpatterns
